@@ -54,15 +54,3 @@ resource "aws_acm_certificate_validation" "cert_validation" {
 resource "aws_route53_zone" "domain" {
   name = var.domain_name
 }
-
-################################################################################
-# ECR
-################################################################################
-resource "aws_ecr_repository" "repo" {
-  name                 = var.project_name
-  image_tag_mutability = "MUTABLE"
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
