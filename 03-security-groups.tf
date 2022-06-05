@@ -69,11 +69,11 @@ resource "aws_security_group" "alb" {
 
 # Security Group - Database
 resource "aws_security_group_rule" "ecs_access" {
-  type = "ingress"
-  from_port         = 5432
-  to_port           = 5432
-  protocol          = "tcp"
-  security_group_id = module.rds_aurora.security_group_id
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = module.rds_aurora.security_group_id
   source_security_group_id = aws_security_group.ecs.id
 }
 
@@ -82,7 +82,7 @@ resource "aws_security_group_rule" "ecs_access" {
 ################################################################################
 variable "your_cidr" {
   description = "Your CIDR block for initial db seeding access"
-  type = list(string)
+  type        = list(string)
 }
 
 resource "aws_security_group_rule" "initial_access" {

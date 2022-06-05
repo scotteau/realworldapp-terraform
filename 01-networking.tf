@@ -28,7 +28,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = merge(local.default_tags,
-    { Name = "${local.prefix}-public-${count.index + 1}" })
+  { Name = "${local.prefix}-public-${count.index + 1}" })
 }
 
 resource "aws_route_table" "public" {
@@ -56,7 +56,7 @@ resource "aws_subnet" "private" {
   map_public_ip_on_launch = true
 
   tags = merge(local.default_tags,
-    { Name = "${local.prefix}-private-${count.index + 1}" })
+  { Name = "${local.prefix}-private-${count.index + 1}" })
 }
 
 # database subnet
@@ -68,7 +68,7 @@ resource "aws_subnet" "database" {
   map_public_ip_on_launch = true
 
   tags = merge(local.default_tags,
-    { Name = "${local.prefix}-database-${count.index + 1}" })
+  { Name = "${local.prefix}-database-${count.index + 1}" })
 }
 
 resource "aws_route_table" "database" {
