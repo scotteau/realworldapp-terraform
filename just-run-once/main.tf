@@ -10,6 +10,17 @@ provider "aws" {
   region = "us-east-1"
 }
 
+terraform {
+  backend "s3" {
+    bucket = "my-terraform-shared-state"
+    key = "realworldapp/dev/ecr_and_cert/terraform.tfstate"
+    region = "ap-southeast-2"
+
+    dynamodb_table = "terraform-shared-state-locks"
+    encrypt = true
+  }
+}
+
 resource "aws_acm_certificate" "cert" {
   provider          = aws.us-east-1
   domain_name       = var.domain_name
