@@ -21,6 +21,16 @@ resource "aws_s3_bucket" "website_hosting_main" {
   tags   = local.default_tags
 }
 
+resource "aws_s3_bucket_cors_configuration" "website_hosting_main" {
+  bucket = aws_s3_bucket.website_hosting_main.bucket
+  cors_rule {
+    allowed_headers = ["Authorization", "Content-Length"]
+    allowed_methods = ["GET","POST"]
+    allowed_origins = ["*"]
+    max_age_seconds = 3000
+  }
+}
+
 resource "aws_s3_bucket_acl" "website" {
   bucket = aws_s3_bucket.website_hosting_main.bucket
   acl    = "public-read"
@@ -28,24 +38,7 @@ resource "aws_s3_bucket_acl" "website" {
 
 resource "aws_s3_bucket_policy" "public-access" {
   bucket = aws_s3_bucket.website_hosting_main.bucket
-  policy = data.aws_iam_policy_document.website_policy.json
-}
-
-data "aws_iam_policy_document" "website_policy" {
-  statement {
-    actions = [
-      "s3:GetObject"
-    ]
-
-    principals {
-      identifiers = ["*"]
-      type        = "AWS"
-    }
-
-    resources = [
-      "${aws_s3_bucket.website_hosting_main.arn}/*"
-    ]
-  }
+  policy = templatefile("${path.root}/templates/s3_policy.json", {bucket: var.domain_name})
 }
 
 
@@ -61,17 +54,28 @@ resource "aws_s3_bucket_website_configuration" "website" {
   }
 }
 
-resource "aws_s3_bucket" "website_hosting_www" {
+resource "aws_s3_bucket" "www_domain" {
   bucket = "www.${var.domain_name}"
-
   tags = local.default_tags
+}
+
+resource "aws_s3_bucket_acl" "public_read" {
+  bucket = aws_s3_bucket.www_domain.bucket
+  acl = "public-read"
 }
 
 
 resource "aws_s3_bucket_website_configuration" "redirect" {
-  bucket = aws_s3_bucket.website_hosting_www.bucket
+  bucket = aws_s3_bucket.www_domain.bucket
 
   redirect_all_requests_to {
     host_name = var.domain_name
+    protocol = "http"
   }
+}
+
+
+resource "aws_s3_bucket_policy" "www_public-access" {
+  bucket = aws_s3_bucket.www_domain.bucket
+  policy = templatefile("${path.root}/templates/s3_policy.json", {bucket: "www.${var.domain_name}"} )
 }
