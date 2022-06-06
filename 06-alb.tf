@@ -1,26 +1,12 @@
-################################################################################
-# alb
-################################################################################
-
-resource "aws_lb" "load-balancer" {
-  name               = "${local.prefix}-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb.id]
-
-  subnets = tolist(aws_subnet.public[*].id)
-
-
-  tags = local.default_tags
-}
-
-# alb - target group
-resource "aws_lb_target_group" "target-group" {
+#################################################################################
+## alb
+#################################################################################
+resource "aws_alb_target_group" "ecs" {
   name        = "${local.prefix}-target-group"
-  port        = 3000
+  port        = 80
   protocol    = "HTTP"
-  target_type = "ip"
   vpc_id      = aws_vpc.main.id
+  target_type = "ip"
 
   health_check {
     path                = "/"
@@ -35,26 +21,37 @@ resource "aws_lb_target_group" "target-group" {
   tags = local.default_tags
 }
 
+resource "aws_lb" "alb" {
+  name               = "${local.prefix}-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb.id]
+  subnets            = tolist(aws_subnet.public[*].id)
 
-# alb - listener
-resource "aws_lb_listener" "https-listener" {
-  load_balancer_arn = aws_lb.load-balancer.arn
+  tags = local.default_tags
+}
+
+variable "certificate_arn" {
+  type = string
+}
+
+
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.alb.arn
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
   certificate_arn   = var.certificate_arn
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.target-group.arn
+    target_group_arn = aws_alb_target_group.ecs.arn
   }
 }
 
-# alb - listener - HTTP
 resource "aws_lb_listener" "redirect-to-https" {
-  load_balancer_arn = aws_lb.load-balancer.arn
+  load_balancer_arn = aws_lb.alb.arn
   port              = "80"
   protocol          = "HTTP"
-
   default_action {
     type = "redirect"
 
@@ -62,7 +59,6 @@ resource "aws_lb_listener" "redirect-to-https" {
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_301"
-      path        = "HTTPS://#{host}:443/#{path}?#{query}"
     }
   }
 }

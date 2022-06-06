@@ -45,23 +45,24 @@ resource "aws_ecs_task_definition" "backend" {
   })
 }
 
-#resource "aws_ecs_service" "server" {
-#  name            = "${local.prefix}-server"
-#  cluster         = aws_ecs_cluster.server.id
-#  task_definition = aws_ecs_task_definition.server.arn
-#  desired_count   = 1
-#  iam_role        = aws_iam_role.ecs_task_role.arn
-#
-#  launch_type = "FARGATE"
-#
-#  load_balancer {
-#    target_group_arn = aws_lb_target_group.target-group.arn
-#    container_name   = "server"
-#    container_port   = 3000
-#  }
-#
-#  network_configuration {
-#    subnets         = [aws_subnet.private[0].id]
-#    security_groups = [aws_security_group.ecs-fargate.id]
-#  }
-#}
+resource "aws_ecs_service" "service" {
+
+  name            = "${local.prefix}-ecs-service"
+  cluster         = aws_ecs_cluster.server.id
+  task_definition = aws_ecs_task_definition.backend.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  load_balancer {
+    container_name   = "realworldapp-server"
+    container_port   = 3000
+    target_group_arn = aws_alb_target_group.ecs.arn
+  }
+
+  network_configuration {
+    subnets          = aws_subnet.public[*].id
+    security_groups  = [aws_security_group.ecs.id]
+    assign_public_ip = true
+  }
+}
+
