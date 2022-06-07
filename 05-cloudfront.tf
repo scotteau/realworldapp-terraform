@@ -28,7 +28,7 @@ resource "aws_cloudfront_distribution" "root_s3_distribution" {
   }
 
 
-  aliases         = ["www.${var.domain_name}"]
+  aliases         = ["www.${var.domain_name}", var.domain_name]
   enabled         = true
   is_ipv6_enabled = true
   price_class     = "PriceClass_All"
