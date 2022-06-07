@@ -34,7 +34,7 @@ resource "aws_subnet" "public" {
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
-  tags = merge(local.default_tags, {Name = "${local.prefix}-route-table-public"})
+  tags = merge(local.default_tags, { Name = "${local.prefix}-route-table-public" })
 }
 
 resource "aws_route" "main" {
@@ -76,7 +76,7 @@ resource "aws_subnet" "database" {
 resource "aws_route_table" "database" {
   vpc_id = aws_vpc.main.id
 
-  tags = merge(local.default_tags, {Name = "${local.prefix}-route-table-database"})
+  tags = merge(local.default_tags, { Name = "${local.prefix}-route-table-database" })
 }
 
 # Only for first access to seed the database initially
