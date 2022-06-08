@@ -100,7 +100,7 @@ resource "aws_eip" "nat" {
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
-  subnet_id = aws_subnet.public[0].id
+  subnet_id     = aws_subnet.public[0].id
 
   tags = local.default_tags
 
@@ -110,18 +110,18 @@ resource "aws_nat_gateway" "nat" {
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
-  tags = merge(local.default_tags, {Name = "${local.prefix}-private-route-table"})
+  tags = merge(local.default_tags, { Name = "${local.prefix}-private-route-table" })
 }
 
 resource "aws_route" "private" {
-  route_table_id = aws_route_table.private.id
-  nat_gateway_id = aws_nat_gateway.nat.id
+  route_table_id         = aws_route_table.private.id
+  nat_gateway_id         = aws_nat_gateway.nat.id
   destination_cidr_block = "0.0.0.0/0"
 }
 
 resource "aws_route_table_association" "private" {
-  count = length(aws_subnet.private)
-  subnet_id = aws_subnet.private[count.index].id
+  count          = length(aws_subnet.private)
+  subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private.id
 }
 
