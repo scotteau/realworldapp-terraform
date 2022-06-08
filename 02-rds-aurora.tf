@@ -35,7 +35,7 @@ module "rds_aurora" {
 
   db_parameter_group_name         = aws_db_parameter_group.postgres_13.id
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.postgres_13.id
-  enabled_cloudwatch_logs_exports = ["postgresql"]
+  enabled_cloudwatch_logs_exports = ["error", "general", "slowquery", "postgresql"]
 
   tags = merge(local.default_tags, { Name = "${local.prefix}-aurora-postgres" })
 }
