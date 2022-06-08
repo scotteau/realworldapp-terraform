@@ -80,14 +80,48 @@ resource "aws_route_table" "database" {
 }
 
 # Only for first access to seed the database initially
-resource "aws_route_table_association" "database" {
-  count          = length(aws_subnet.database)
-  route_table_id = aws_route_table.database.id
-  subnet_id      = aws_subnet.database[count.index].id
+#resource "aws_route_table_association" "database" {
+#  count          = length(aws_subnet.database)
+#  route_table_id = aws_route_table.database.id
+#  subnet_id      = aws_subnet.database[count.index].id
+#}
+#
+#resource "aws_route" "database" {
+#  route_table_id         = aws_route_table.database.id
+#  destination_cidr_block = "0.0.0.0/0"
+#  gateway_id             = aws_internet_gateway.main.id
+#}
+
+
+# nat gateway for private subnets
+resource "aws_eip" "nat" {
+  vpc = true
 }
 
-resource "aws_route" "database" {
-  route_table_id         = aws_route_table.database.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.main.id
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat.id
+  subnet_id = aws_subnet.public[0].id
+
+  tags = local.default_tags
+
+  depends_on = [aws_internet_gateway.main]
 }
+
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(local.default_tags, {Name = "${local.prefix}-private-route-table"})
+}
+
+resource "aws_route" "private" {
+  route_table_id = aws_route_table.private.id
+  nat_gateway_id = aws_nat_gateway.nat.id
+  destination_cidr_block = "0.0.0.0/0"
+}
+
+resource "aws_route_table_association" "private" {
+  count = length(aws_subnet.private)
+  subnet_id = aws_subnet.private[count.index].id
+  route_table_id = aws_route_table.private.id
+}
+
