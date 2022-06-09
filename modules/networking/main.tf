@@ -1,10 +1,9 @@
-
-################################################################################
-# vpc & network
-################################################################################
+provider "aws" {
+  region = var.region
+}
 
 resource "aws_vpc" "main" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = var.cidr_block
   enable_dns_hostnames = true
   enable_dns_support   = true
 
@@ -18,7 +17,6 @@ resource "aws_internet_gateway" "main" {
 
 data "aws_availability_zones" "available" {}
 
-
 # public subnets
 resource "aws_subnet" "public" {
   count                   = length(var.public)
@@ -28,7 +26,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = merge(local.default_tags,
-  { Name = "${local.prefix}-public-${count.index + 1}" })
+    { Name = "${local.prefix}-public-${count.index + 1}" })
 }
 
 resource "aws_route_table" "public" {
@@ -49,6 +47,7 @@ resource "aws_route_table_association" "public" {
   subnet_id      = aws_subnet.public[count.index].id
 }
 
+
 # private subnet
 resource "aws_subnet" "private" {
   count                   = length(var.private)
@@ -60,6 +59,7 @@ resource "aws_subnet" "private" {
   tags = merge(local.default_tags,
   { Name = "${local.prefix}-private-${count.index + 1}" })
 }
+
 
 # database subnet
 resource "aws_subnet" "database" {
@@ -78,6 +78,7 @@ resource "aws_route_table" "database" {
 
   tags = merge(local.default_tags, { Name = "${local.prefix}-route-table-database" })
 }
+
 
 # Only for first access to seed the database initially
 #resource "aws_route_table_association" "database" {
