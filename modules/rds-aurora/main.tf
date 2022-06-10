@@ -7,18 +7,19 @@ module "rds_aurora" {
   version = "7.1.0"
 
 
-  name           = "${local.prefix}-db-postgres"
+  name           = var.cluster_name
   engine         = "aurora-postgresql"
-  engine_version = "13.4"
-  instance_class = "db.t4g.medium"
+  engine_version = var.postgres_version
+  instance_class = var.instance_class
 
+#  todo - how to handle this ??
   instances = {
     one = {
       publicly_accessible = true
     }
   }
 
-  vpc_id                 = aws_vpc.main.id
+  vpc_id                 = var.vpc_id
   db_subnet_group_name   = aws_db_subnet_group.aurora_postgres.name
   create_db_subnet_group = false
   create_security_group  = true
@@ -111,3 +112,39 @@ output "endpoint" {
   value = module.rds_aurora.cluster_endpoint
 }
 
+
+# database subnet
+resource "aws_subnet" "database" {
+  count                   = length(var.database)
+  vpc_id                  = var.vpc_id
+  cidr_block              = var.database[count.index]
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  map_public_ip_on_launch = true
+
+  tags = merge(local.default_tags,
+    { Name = "${local.prefix}-database-${count.index + 1}" })
+}
+
+resource "aws_route_table" "database" {
+  vpc_id = var.vpc_id
+
+  tags = merge(local.default_tags, { Name = "${local.prefix}-route-table-database" })
+}
+
+data "aws_availability_zones" "available" {}
+
+
+
+# Only for first access to seed the database initially
+resource "aws_route_table_association" "database" {
+  count          = var.enable_direct_access ? length(aws_subnet.database) : 0
+  route_table_id = aws_route_table.database.id
+  subnet_id      = aws_subnet.database[count.index].id
+}
+
+resource "aws_route" "database" {
+  count = var.enable_direct_access ? 1 : 0
+  route_table_id         = aws_route_table.database.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = var.internet_gateway_id
+}
