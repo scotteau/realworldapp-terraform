@@ -61,38 +61,6 @@ resource "aws_subnet" "private" {
 }
 
 
-# database subnet
-resource "aws_subnet" "database" {
-  count                   = length(var.database)
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.database[count.index]
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
-  map_public_ip_on_launch = true
-
-  tags = merge(local.default_tags,
-  { Name = "${local.prefix}-database-${count.index + 1}" })
-}
-
-resource "aws_route_table" "database" {
-  vpc_id = aws_vpc.main.id
-
-  tags = merge(local.default_tags, { Name = "${local.prefix}-route-table-database" })
-}
-
-
-# Only for first access to seed the database initially
-#resource "aws_route_table_association" "database" {
-#  count          = length(aws_subnet.database)
-#  route_table_id = aws_route_table.database.id
-#  subnet_id      = aws_subnet.database[count.index].id
-#}
-#
-#resource "aws_route" "database" {
-#  route_table_id         = aws_route_table.database.id
-#  destination_cidr_block = "0.0.0.0/0"
-#  gateway_id             = aws_internet_gateway.main.id
-#}
-
 
 # nat gateway for private subnets
 resource "aws_eip" "nat" {

@@ -37,9 +37,6 @@ variable "private" {
   type        = list(string)
 }
 
-variable "database" {
-  description = "A list of cidr blocks for private subnets hosting database"
-  type        = list(string)
-}
+
 
 
