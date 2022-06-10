@@ -12,12 +12,7 @@ module "rds_aurora" {
   engine_version = var.postgres_version
   instance_class = var.instance_class
 
-#  todo - how to handle this ??
-  instances = {
-    one = {
-      publicly_accessible = true
-    }
-  }
+  instances = var.cluster_instances
 
   vpc_id                 = var.vpc_id
   db_subnet_group_name   = aws_db_subnet_group.aurora_postgres.name
@@ -68,19 +63,6 @@ resource "aws_db_subnet_group" "aurora_postgres" {
   tags = local.default_tags
 }
 
-# db variables
-variable "db_name" {
-  type = string
-}
-
-variable "master_username" {
-  type = string
-}
-
-
-locals {
-  dir = "/${var.environment}/${var.project_name}/database"
-}
 
 resource "aws_ssm_parameter" "master_password" {
   name  = "${local.dir}/password"
@@ -94,22 +76,12 @@ resource "aws_ssm_parameter" "master_username" {
   value = var.master_username
 }
 
-locals {
-  protocol = "postgresql"
-  username = aws_ssm_parameter.master_username.value
-  password = aws_ssm_parameter.master_password.value
-  host     = module.rds_aurora.cluster_endpoint
-  port     = module.rds_aurora.cluster_port
-}
+
 
 resource "aws_ssm_parameter" "url" {
   name  = "${local.dir}/database_url"
   type  = "SecureString"
   value = "${local.protocol}://${local.username}:${local.password}@${local.host}:${local.port}/${var.db_name}?schema=public"
-}
-
-output "endpoint" {
-  value = module.rds_aurora.cluster_endpoint
 }
 
 

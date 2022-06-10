@@ -64,4 +64,29 @@ variable "internet_gateway_id" {
   type = string
 }
 
+# db variables
+variable "db_name" {
+  type = string
+}
+
+variable "master_username" {
+  type = string
+}
+
+locals {
+  dir = "/${var.environment}/${var.project_name}/database"
+}
+
+locals {
+  protocol = "postgresql"
+  username = aws_ssm_parameter.master_username.value
+  password = aws_ssm_parameter.master_password.value
+  host     = module.rds_aurora.cluster_endpoint
+  port     = module.rds_aurora.cluster_port
+}
+
+variable "cluster_instances" {
+  description = "The configuration of db instances"
+}
+
 
