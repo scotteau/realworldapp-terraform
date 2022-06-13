@@ -22,10 +22,6 @@ variable "price_class" {
   type = string
 }
 
-variable "log_bucket_domain_name" {
-  description = "The log bucket domain name"
-}
-
 locals {
   default_tags = {
     ManagedBy   = "Terraform"

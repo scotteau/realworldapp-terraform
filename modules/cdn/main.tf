@@ -18,7 +18,6 @@ resource "aws_cloudfront_distribution" "root_s3_distribution" {
     }
   }
 
-
   aliases         = ["www.${var.domain_name}", var.domain_name]
   enabled         = true
   is_ipv6_enabled = true
@@ -51,10 +50,21 @@ resource "aws_cloudfront_distribution" "root_s3_distribution" {
   }
 
   logging_config {
-    bucket = var.log_bucket_domain_name
+    bucket = aws_s3_bucket.logs.bucket_domain_name
     prefix = "cloudfront/"
   }
 
   tags = local.default_tags
 
+}
+
+# bucket for logs
+resource "aws_s3_bucket" "logs" {
+  bucket = "logs.${var.domain_name}"
+  tags   = local.default_tags
+}
+
+resource "aws_s3_bucket_acl" "logs" {
+  bucket = aws_s3_bucket.logs.bucket
+  acl    = "log-delivery-write"
 }

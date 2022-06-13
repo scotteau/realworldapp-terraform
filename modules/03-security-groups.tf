@@ -1,20 +1,20 @@
 ################################################################################
 # Security Group
 ################################################################################
-variable "database_ingress_ports" {
-  description = "Ports opened for database"
-  type        = list(number)
-}
-
-variable "ecs_ingress_ports" {
-  description = "Ports opened for ECS"
-  type        = list(number)
-}
-
-variable "alb_ingress_ports" {
-  description = "Ports opened for ALB"
-  type        = list(number)
-}
+#variable "database_ingress_ports" {
+#  description = "Ports opened for database"
+#  type        = list(number)
+#}
+#
+#variable "ecs_ingress_ports" {
+#  description = "Ports opened for ECS"
+#  type        = list(number)
+#}
+#
+#variable "alb_ingress_ports" {
+#  description = "Ports opened for ALB"
+#  type        = list(number)
+#}
 
 
 
