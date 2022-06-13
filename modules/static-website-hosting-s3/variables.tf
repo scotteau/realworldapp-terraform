@@ -27,10 +27,12 @@ variable "domain_name" {
 variable "hosting_index_document" {
   description = "The name of the index document"
   type        = string
+  default = "index.html"
 }
 
 variable "hosting_error_document" {
   description = "The name of the error document"
   type        = string
+  default = "404.html"
 }
 
