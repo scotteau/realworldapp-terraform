@@ -129,3 +129,18 @@ variable "autoscaling_based_on_cpu_target_value" {
   description = "The target value for autoscaling policy based on cpu"
   type = number
 }
+
+variable "your_cidr" {
+  description = "Your CIDR block for initial db seeding access"
+  type        = list(string)
+}
+
+variable "enabled_direct_access" {
+  description = "Grant access to local machine within ecs security group"
+  type = bool
+}
+
+variable "database_security_group_id" {
+  description = "The ID of database's security group"
+  type = string
+}

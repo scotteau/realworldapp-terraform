@@ -46,15 +46,7 @@ resource "aws_security_group_rule" "ecs_access" {
 #  to_port           = 5432
 #}
 #
-#resource "aws_security_group_rule" "access" {
-#  description       = "Grant access to local machine to ecs sg"
-#  from_port         = 3000
-#  protocol          = "tcp"
-#  security_group_id = aws_security_group.ecs.id
-#  to_port           = 3000
-#  type              = "ingress"
-#  cidr_blocks       = var.your_cidr
-#}
+
 
 
 
