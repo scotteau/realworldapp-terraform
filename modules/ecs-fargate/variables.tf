@@ -106,6 +106,26 @@ variable "ingress_security_groups" {
   type = list(string)
 }
 
+variable "enabled_auto_scaling" {
+  description = "Enabled auto-scaling group for ecs"
+  type = bool
+}
 
 
+variable "autoscaling_capacity" {
+  description = "The max and min capacity for ecs autoscaling"
+  type = {
+    max = number,
+    min = number
+  }
+}
 
+variable "autoscaling_based_on_ram_target_value" {
+  description = "The target value for autoscaling policy based on ram"
+  type = number
+}
+
+variable "autoscaling_based_on_cpu_target_value" {
+  description = "The target value for autoscaling policy based on cpu"
+  type = number
+}
