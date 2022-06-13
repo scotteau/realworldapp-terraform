@@ -38,3 +38,8 @@ variable "alb_ingress_ports" {
   type = list(number)
 }
 
+variable "domain_name" {
+  description = "The domain name of the hosted website"
+  type        = string
+}
+

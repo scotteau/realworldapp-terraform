@@ -3,7 +3,7 @@
 ################################################################################
 resource "aws_cloudfront_distribution" "root_s3_distribution" {
   origin {
-    domain_name = var.website_endpoint
+    domain_name = aws_s3_bucket.website_hosting_main.website_endpoint
     origin_id   = local.origin_id
 
     custom_header {

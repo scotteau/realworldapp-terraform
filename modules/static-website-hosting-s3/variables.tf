@@ -36,3 +36,17 @@ variable "hosting_error_document" {
   default = "404.html"
 }
 
+
+variable "global_certificate_arn" {
+  description = "certificate arn"
+  type        = string
+}
+
+locals {
+  origin_id = "S3-${var.domain_name}"
+}
+
+variable "price_class" {
+  description = "The price_class for the distribution"
+  type = string
+}
