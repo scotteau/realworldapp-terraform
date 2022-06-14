@@ -103,7 +103,7 @@ module "ecs-fargate" {
     min = 1
   }
 
-  family = "realworldapp-server"
+  family = "${local.project_name}-server"
   cpu = "256"
   memory = "512"
   cpu_architecture = "ARM64"
