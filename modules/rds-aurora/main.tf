@@ -87,9 +87,9 @@ resource "aws_ssm_parameter" "url" {
 
 # database subnet
 resource "aws_subnet" "database" {
-  count                   = length(var.database)
+  count                   = length(var.subnet_cidr)
   vpc_id                  = var.vpc_id
-  cidr_block              = var.database[count.index]
+  cidr_block              = var.subnet_cidr[count.index]
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
 

@@ -44,7 +44,7 @@ variable "database_ingress_ports" {
   type        = list(number)
 }
 
-variable "database" {
+variable "subnet_cidr" {
   description = "A list of cidr blocks for private subnets hosting database"
   type        = list(string)
 }
@@ -71,6 +71,7 @@ variable "db_name" {
 
 variable "master_username" {
   type = string
+  default = "postgres"
 }
 
 locals {
@@ -87,6 +88,11 @@ locals {
 
 variable "cluster_instances" {
   description = "The configuration of db instances"
+}
+
+variable "ecs_sg_id" {
+  description = "The ID of ECS security group ID"
+  type = string
 }
 
 
