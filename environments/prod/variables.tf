@@ -18,3 +18,8 @@ variable "certificate_arn" {
   description = "certificate arn for alb"
   type = string
 }
+
+variable "ecr_repository_url" {
+  description = "The repository url of preferred docker image within ECR"
+  type        = string
+}

@@ -32,11 +32,6 @@ variable "subnets_ids" {
   type = list(string)
 }
 
-variable "security_groups" {
-  description = "A list of the IDs for security groups"
-  type = list(string)
-}
-
 variable "ecr_repository_url" {
   description = "The repository url of preferred docker image within ECR"
   type        = string
@@ -114,30 +109,35 @@ variable "enabled_auto_scaling" {
 
 variable "autoscaling_capacity" {
   description = "The max and min capacity for ecs autoscaling"
-  type = {
+  type = object({
     max = number,
     min = number
-  }
+  })
+
 }
 
 variable "autoscaling_based_on_ram_target_value" {
   description = "The target value for autoscaling policy based on ram"
   type = number
+  default = 80
 }
 
 variable "autoscaling_based_on_cpu_target_value" {
   description = "The target value for autoscaling policy based on cpu"
   type = number
+  default = 60
 }
 
 variable "your_cidr" {
   description = "Your CIDR block for initial db seeding access"
   type        = list(string)
+  default = []
 }
 
 variable "enabled_direct_access" {
   description = "Grant access to local machine within ecs security group"
   type = bool
+  default = false
 }
 
 variable "database_security_group_id" {
