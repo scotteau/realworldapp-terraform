@@ -2,6 +2,7 @@ provider "aws" {
   region = "ap-southeast-2"
 }
 
+# Remote backend s3 bucket
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "my-terraform-shared-state"
 
@@ -37,7 +38,7 @@ resource "aws_s3_bucket_public_access_block" "public_access" {
   restrict_public_buckets = true
 }
 
-
+# Remote backend lock
 resource "aws_dynamodb_table" "terraform_locks" {
   name = "terraform-shared-state-locks"
   billing_mode = "PAY_PER_REQUEST"
