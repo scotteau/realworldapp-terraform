@@ -10,6 +10,11 @@ variable "domain_name" {
 }
 
 variable "global_certificate_arn" {
-  description = "certificate arn"
+  description = "certificate arn for cloudfront distribution"
   type        = string
+}
+
+variable "certificate_arn" {
+  description = "certificate arn for alb"
+  type = string
 }

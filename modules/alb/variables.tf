@@ -23,10 +23,10 @@ variable "vpc_id" {
   type = string
 }
 
-variable "security_groups" {
-  description = "A list of security group IDs to assign to the LB"
-  type = list(string)
-}
+#variable "security_groups" {
+#  description = "A list of security group IDs to assign to the LB"
+#  type = list(string)
+#}
 
 variable "subnets" {
   description = "A list of subnet IDs to attach to the LB"
@@ -43,3 +43,6 @@ variable "domain_name" {
   type        = string
 }
 
+variable "certificate_arn" {
+  type = string
+}

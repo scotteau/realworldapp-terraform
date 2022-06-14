@@ -25,14 +25,12 @@ resource "aws_lb" "alb" {
   name               = "${local.prefix}-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = var.security_groups
+  security_groups    = [aws_security_group.alb.id]
   subnets            = var.subnets
   tags = local.default_tags
 }
 
-variable "certificate_arn" {
-  type = string
-}
+
 
 
 resource "aws_lb_listener" "https" {

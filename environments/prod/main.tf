@@ -72,3 +72,16 @@ module "static-site-hosting" {
 
   global_certificate_arn = var.global_certificate_arn
 }
+
+module "alb" {
+  source = "../../modules/alb"
+
+  project_name = local.project_name
+  environment = local.environment
+  domain_name = var.domain_name
+
+  vpc_id = module.vpc.vpc_id
+  alb_ingress_ports = [80, 443]
+  certificate_arn = var.certificate_arn
+  subnets = module.vpc.public_subnets[*].id
+}
