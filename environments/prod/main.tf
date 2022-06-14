@@ -43,7 +43,7 @@ module "database" {
   instance_class         = "db.t4g.medium"
   vpc_id                 = module.vpc.vpc_id
   database_ingress_ports = [5432]
-  subnet_cidr               = ["10.0.21.0/24", "10.0.22.0/24"]
+  subnet_cidr            = ["10.0.21.0/24", "10.0.22.0/24"]
   cluster_instances = {
     one = {
       publicly_accessible = true
@@ -54,8 +54,21 @@ module "database" {
     }
   }
   ecs_sg_id            = ""
-  db_name = local.project_name
+  db_name              = local.project_name
   enable_direct_access = true
-  your_cidr = var.your_cidr
-  internet_gateway_id = module.vpc.internet_gateway_id
+  your_cidr            = var.your_cidr
+  internet_gateway_id  = module.vpc.internet_gateway_id
+}
+
+module "static-site-hosting" {
+  source = "../../modules/static-website-hosting-s3"
+
+  project_name = local.project_name
+  environment  = local.environment
+  domain_name  = var.domain_name
+
+  hosting_index_document = "index.html"
+  hosting_error_document = "index.html"
+
+  global_certificate_arn = var.global_certificate_arn
 }

@@ -49,4 +49,5 @@ locals {
 variable "price_class" {
   description = "The price_class for the distribution"
   type = string
+  default = "PriceClass_All"
 }

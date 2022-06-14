@@ -78,8 +78,8 @@ resource "aws_route53_record" "root" {
 
   alias {
     evaluate_target_health = false
-    name                   = var.distribution_domain_name
-    zone_id                = var.distribution_hosted_zone_id
+    name                   = aws_cloudfront_distribution.root_s3_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.root_s3_distribution.hosted_zone_id
   }
 }
 
@@ -91,8 +91,8 @@ resource "aws_route53_record" "www" {
 
   alias {
     evaluate_target_health = false
-    name                   = var.distribution_domain_name
-    zone_id                = var.distribution_hosted_zone_id
+    name                   = aws_cloudfront_distribution.root_s3_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.root_s3_distribution.hosted_zone_id
   }
 }
 
