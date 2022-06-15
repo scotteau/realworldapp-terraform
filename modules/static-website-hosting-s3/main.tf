@@ -5,6 +5,7 @@
 # bucket for root domain hosting
 resource "aws_s3_bucket" "website_hosting_main" {
   bucket = var.domain_name
+  force_destroy = true
   tags   = local.default_tags
 }
 
@@ -44,6 +45,7 @@ resource "aws_s3_bucket_website_configuration" "website" {
 # bucket for www domain redirecting
 resource "aws_s3_bucket" "website_hosting_www" {
   bucket = "www.${var.domain_name}"
+  force_destroy = true
   tags   = local.default_tags
 }
 

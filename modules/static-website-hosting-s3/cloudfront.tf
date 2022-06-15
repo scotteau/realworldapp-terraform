@@ -61,6 +61,7 @@ resource "aws_cloudfront_distribution" "root_s3_distribution" {
 # bucket for logs
 resource "aws_s3_bucket" "logs" {
   bucket = "logs.${var.domain_name}"
+  force_destroy = true
   tags   = local.default_tags
 }
 
