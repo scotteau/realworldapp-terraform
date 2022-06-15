@@ -19,6 +19,7 @@ variable "hosting_error_document" {
 # bucket for root domain hosting
 resource "aws_s3_bucket" "website_hosting_main" {
   bucket = var.domain_name
+  force_destroy = true
   tags   = local.default_tags
 }
 
@@ -84,6 +85,7 @@ resource "aws_s3_bucket_policy" "www_public-access" {
 # bucket for logs
 resource "aws_s3_bucket" "logs" {
   bucket = "logs.${var.domain_name}"
+  force_destroy = true
   tags   = local.default_tags
 }
 
