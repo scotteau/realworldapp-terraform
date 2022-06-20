@@ -19,7 +19,7 @@ module "database" {
       instance_class = "db.t4g.medium"
     }
   }
-  ecs_sg_id            = ""
+  ecs_sg_id            = module.ecs-fargate.ecs_sg_id
   db_name              = local.project_name
   enable_direct_access = true
   your_cidr            = var.your_cidr
